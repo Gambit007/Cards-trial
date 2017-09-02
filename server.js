@@ -5,8 +5,10 @@ var server = app.listen(3003, "0.0.0.0", function () {
     var port = server.address().port
     console.log("Example app listening at http://%s:%s", host, port)
 });
+var bodyParser = require('body-parser');
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 var mongoose = require('mongoose');
-/*var connectString = "mongodb://localhost/attendanceDatabase";
+var connectString = "mongodb://foobar:foobar@ds121494.mlab.com:21494/cards";
 console.log(mongoose.connection.readyState);
 console.log(connectString)
 mongoose.connect(connectString);
@@ -17,7 +19,12 @@ db.once('open', function () {
     console.log("Connection succeeded.");
 
     console.log("connected");
-});*/
+    //require("./users/users.js");
+    //require("./users/attendanceUpdate.js");
+    //require("./users/markAttendance.js");
+    require("./models/userData.js");
+    require("./routes/routes.js")(app);
+});
 
 const path = require('path');
 app.use(function (req, res, next) {
@@ -42,5 +49,7 @@ app.use(function (req, res, next) {
 // app.use(express.static('uploads'));
 app.use('/', express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(bodyParser.urlencoded({extended : true})); //application/x-www-form-urlencoded
+app.use(bodyParser.json());
 var rootPath = __dirname;
 

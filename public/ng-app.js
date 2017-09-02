@@ -21,19 +21,11 @@ var app = angular.module('myApp',['ngDragDrop','ngRoute']);
 
 app.controller('ListController', function ($scope, $http,$q) {
     $scope.suits = ["spade","clubs","hearts","diamonds"];
-    
-    $scope.spade =[];
-    $scope.diamonds =[];
-    $scope.hearts =[];
-    $scope.clubs =[];
     $scope.initalCardArray = [];
+    $scope.dumpedSuits=[];
     localStorage.userSelect = {}
 
-    for(var s = 0 ; s < $scope.suits.length ; s++){
-    for(var i = 1 ; i < 14 ; i++) {
-        $scope.initalCardArray.push({value:i, suit:$scope.suits[s]})
-    }
-}
+
 $scope.beforeDrop = function(e,ui){
     var deferred = $q.defer();
      var draggableId = ui.draggable.attr("id");
@@ -49,43 +41,55 @@ $scope.beforeDrop = function(e,ui){
 
 }
 
-$scope.startCallback = function(e,ui,currval){
+$scope.startCallback = function(e,ui,currval,index){
     $scope.currVal = currval;
+    $scope.indexData = index;
 }
 $scope.dropCallback = function(e,ui){
-    if(e.target.innerText.trim().toLowerCase()== "spade"){
-        $scope.spade.push({value:$scope.currVal.value, suit:$scope.currVal.suit})
-        console.log($scope.spade);
-        localStorage.userSelect['spadeSelect'] = $scope.spade
-    } else if(e.target.innerText.trim().toLowerCase()== "hearts"){
-        $scope.hearts.push({value:$scope.currVal.value, suit:$scope.currVal.suit})
-        console.log($scope.hearts);
-        localStorage.userSelect['heartsSelect'] = $scope.hearts
-    } else if(e.target.innerText.trim().toLowerCase()== "diamonds"){
-        $scope.diamonds.push({value:$scope.currVal.value, suit:$scope.currVal.suit})
-        localStorage.userSelect['diamondSelect'] = $scope.diamonds
-        console.log($scope.diamonds);
-    } else if(e.target.innerText.trim().toLowerCase()== "clubs"){
-        $scope.clubs.push({value:$scope.currVal.value, suit:$scope.currVal.suit})
-        console.log($scope.clubs);
-        localStorage.userSelect['clubSelect'] = $scope.clubs
+        $scope.dumpedSuits.push({value:$scope.currVal.value, suit:$scope.currVal.suit});
+        console.log($scope.dumpedSuits);
+        $scope.initalCardArray.splice($scope.indexData,1)
+        console.log($scope.initalCardArray.length);
+        if($scope.initalCardArray.length == 0){
+            alert("you have won the game");
+            for(var s = 0 ; s < $scope.suits.length ; s++){
+        for(var i = 1 ; i < 14 ; i++) {
+            $scope.initalCardArray.push({value:i, suit:$scope.suits[s]})
+        }
     }
+        }
+
+        //localStorage.userSelect['spadeSelect'] = $scope.spade
+}
+
+$scope.logout = function(){
+     $http.post("/save-user-data", {userID: "2",savedValues:JSON.stringify($scope.dumpedSuits)}).then(function (response) {
+     console.log(response.data);
+     });
 }
 
 $scope.loadState = function(){
-    var spade = JSON.parse(localStorage.getItem("userSelect"));
-    if((spade == undefined && hearts == undefined && diamonds == undefined && clubs == undefined)){
-
+    $http.post("/get-user-data", {userID: "2"}).then(function (response) {
+     console.log(response.data);
+     $scope.userSaved = JSON.parse(response.data.data[0].savedValues);
+    for(var s = 0 ; s < $scope.suits.length ; s++){
+        for(var i = 1 ; i < 3 ; i++) {
+            $scope.initalCardArray.push({value:i, suit:$scope.suits[s]})
+        }
     }
-    else {
-        var arr3 = spade.concat(hearts).concat(diamonds).concat(clubs);
-        for(var x = 0 ; x < $scope.initalCardArray.length ; x++){
-
+    if($scope.userSaved){
+    for (var x = 0; x <$scope.initalCardArray.length; x++){
+        for(var y = 0; y<$scope.userSaved.length; y++){
+            if($scope.initalCardArray[x].value == $scope.userSaved[y].value && $scope.initalCardArray[x].suit == $scope.userSaved[y].suit){
+                $scope.initalCardArray.splice(x,1)
+            }
         }
     }
 }
+ });
+}
 
-//$scope.loadState()
+$scope.loadState()
 
 
 });
