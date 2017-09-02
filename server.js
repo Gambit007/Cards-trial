@@ -5,6 +5,19 @@ var server = app.listen(3003, "0.0.0.0", function () {
     var port = server.address().port
     console.log("Example app listening at http://%s:%s", host, port)
 });
+var mongoose = require('mongoose');
+/*var connectString = "mongodb://localhost/attendanceDatabase";
+console.log(mongoose.connection.readyState);
+console.log(connectString)
+mongoose.connect(connectString);
+var db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+    console.log("Connection succeeded.");
+
+    console.log("connected");
+});*/
 
 const path = require('path');
 app.use(function (req, res, next) {

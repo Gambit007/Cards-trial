@@ -1,4 +1,24 @@
-var app = angular.module('myApp', ['ngDragDrop']);
+var app = angular.module('myApp',['ngDragDrop','ngRoute']);
+
+    app.config(function($routeProvider) {
+        $routeProvider
+
+            // route for the home page
+            .when('/', {
+                templateUrl : 'login.html',
+                controller  : 'loginController'
+            })
+
+            // route for the about page
+            .when('/cards', {
+                templateUrl : 'cards.html',
+                controller  : 'ListController'
+            })
+
+            // route for the contact page
+            
+    });
+
 app.controller('ListController', function ($scope, $http,$q) {
     $scope.suits = ["spade","clubs","hearts","diamonds"];
     
@@ -7,6 +27,7 @@ app.controller('ListController', function ($scope, $http,$q) {
     $scope.hearts =[];
     $scope.clubs =[];
     $scope.initalCardArray = [];
+    localStorage.userSelect = {}
 
     for(var s = 0 ; s < $scope.suits.length ; s++){
     for(var i = 1 ; i < 14 ; i++) {
@@ -35,27 +56,24 @@ $scope.dropCallback = function(e,ui){
     if(e.target.innerText.trim().toLowerCase()== "spade"){
         $scope.spade.push({value:$scope.currVal.value, suit:$scope.currVal.suit})
         console.log($scope.spade);
-        localStorage.userSelect.spadeSelect = $scope.spade
+        localStorage.userSelect['spadeSelect'] = $scope.spade
     } else if(e.target.innerText.trim().toLowerCase()== "hearts"){
         $scope.hearts.push({value:$scope.currVal.value, suit:$scope.currVal.suit})
         console.log($scope.hearts);
-        localStorage.userSelect.heartsSelect = $scope.hearts
+        localStorage.userSelect['heartsSelect'] = $scope.hearts
     } else if(e.target.innerText.trim().toLowerCase()== "diamonds"){
         $scope.diamonds.push({value:$scope.currVal.value, suit:$scope.currVal.suit})
-        localStorage.userSelect.diamondSelect = $scope.diamonds
+        localStorage.userSelect['diamondSelect'] = $scope.diamonds
         console.log($scope.diamonds);
     } else if(e.target.innerText.trim().toLowerCase()== "clubs"){
         $scope.clubs.push({value:$scope.currVal.value, suit:$scope.currVal.suit})
         console.log($scope.clubs);
-        localStorage.userSelect.clubSelect = $scope.clubs
+        localStorage.userSelect['clubSelect'] = $scope.clubs
     }
 }
 
 $scope.loadState = function(){
-    var spade = JSON.parse(localStorage.getItem("spadeSelect"));
-    var hearts = JSON.parse(localStorage.getItem("heartsSelect"));
-    var diamonds = JSON.parse(localStorage.getItem("diamondSelect"));
-    var clubs = JSON.parse(localStorage.getItem("clubSelect"));
+    var spade = JSON.parse(localStorage.getItem("userSelect"));
     if((spade == undefined && hearts == undefined && diamonds == undefined && clubs == undefined)){
 
     }
@@ -67,8 +85,14 @@ $scope.loadState = function(){
     }
 }
 
-$scope.loadState()
+//$scope.loadState()
 
 
 });
+app.controller('loginController', function ($scope, $http,$q,$location) {
+    $scope.login = function(){
+        $location.path('cards');
+    }
+});
+
 

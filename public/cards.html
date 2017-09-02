@@ -1,0 +1,51 @@
+    <div class="global-wrapper">
+     <div>
+      <div>
+        <div class="col-md-9">
+          <div class="panel panel-default" ng-init="getRecords()">
+            <div class="panel-body">
+                <div class="form-group">
+                  <div class="card-columns">
+                  <div class="card" style="display:inline-block;width:100px;height:70px;border:groove;border-color: #333;" ng-repeat="a in initalCardArray " data-drag="true" data-jqyoui-options="{revert: 'invalid'}" jqyoui-draggable="{index: {{$index}}, placeholder: 'keep',onStart:'startCallback(a, $index)'}" id="{{a.value + a.suit}}">
+                    <div class="card-block">
+                      <h4 class="card-title">{{a.value}}</h4>
+                      <h4  class="card-text">{{a.suit}}</h4>
+                    </div>
+                  </div>
+                  </div>
+
+                  <input ng-hide="!appDetails.length" type="button" class="btn btn-primary pull-right" value="Submit" ng-click="uploadFile()">
+                  <!--<input ng-hide="!appDetails.length" type="button" class="btn btn-danger pull-right" ng-click="remove()" value="Remove">-->
+                </div>
+                          </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+             <div  data-drop="true" jqyoui-droppable="{beforeDrop: 'beforeDrop',onDrop:'dropCallback',multiple:true}" id="clubs"
+                  style="height:150px;">
+                    <div>
+                      <h4>Clubs</h4>
+                    </div>
+                  </div>
+                   <div  data-drop="true" ng-model = "spade" jqyoui-droppable="{beforeDrop: 'beforeDrop',onDrop:'dropCallback',multiple:true}" id="spade"
+                  style="height:150px;">
+                    <div>
+                      <h4>Spade</h4>
+                    </div>
+                  </div>
+                   <div  data-drop="true" jqyoui-droppable="{beforeDrop: 'beforeDrop',onDrop:'dropCallback',multiple:true}" id="hearts"
+                  style="height:150px;">
+                    <div>
+                      <h4>Hearts</h4>
+                    </div>
+                  </div>
+                   <div  data-drop="true" ng-model="diamonds" jqyoui-droppable="{beforeDrop: 'beforeDrop',onDrop:'dropCallback',multiple:true}" id="diamonds"
+                  style="height:150px;">
+                    <div>
+                      <h4>Diamonds</h4>
+                    </div>
+                  </div>
+        </div>
+      </div>
+    </div>
+  </div>
