@@ -21,7 +21,7 @@ db.once('open', function () {
     console.log("connected");
     //require("./users/users.js");
     //require("./users/attendanceUpdate.js");
-    //require("./users/markAttendance.js");
+    require("./models/user.js");
     require("./models/userData.js");
     require("./routes/routes.js")(app);
 });
